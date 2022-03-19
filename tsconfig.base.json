@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "node",
+    "strict": true,
+    "jsx": "preserve",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
