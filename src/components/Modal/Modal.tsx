@@ -1,25 +1,25 @@
 import PropTypes from 'vue-types'
 import {
-  defineComponent, toRefs, ref, computed, Teleport,
+  Teleport, computed, defineComponent, ref, toRefs,
 } from 'vue'
+import { useEffect, useState } from '@m9ch/vhooks'
 
-import { CloseSmall } from './Icons'
 import {
   getArrowStyle,
+  getDocumentElement,
   getHotSpotStyle,
   getModalStyle,
-  getScrollContainer,
-  getDocumentElement,
   getNodeName,
+  getScrollContainer,
 } from '../../utils'
-import { useEffect, useNormalizedStyle } from '../../composable'
 import { MARGIN } from '../../constants/const'
-import { IModal } from '../../typings/guide'
-import './Modal.less'
+import type { IModal } from '../../typings/guide'
+import { CloseSmall } from './Icons'
+import './Modal.css'
 
 const PREFIX = 'guide-modal'
 
-export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx) => {
+const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx) => {
   const {
     steps,
     stepText,
@@ -52,13 +52,9 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
   /* the index of the focused element in the NodeList `focusableEls` */
   const focusedIdxRef = ref<number>(0)
 
-  const modalStyleRef = ref({})
-  const arrowStyleRef = ref({})
-  const hotspotStyleRef = ref({})
-
-  const normalizedModalStyle = useNormalizedStyle(modalStyleRef)
-  const normalizedArrowStyle = useNormalizedStyle(arrowStyleRef)
-  const normalizedHotspotStyle = useNormalizedStyle(hotspotStyleRef)
+  const [modalStyle, setModalStyle] = useState({})
+  const [arrowStyle, setArrowStyle] = useState({})
+  const [hotspotStyle, setHotpotStyle] = useState({})
 
   const scrollContainer = computed(() => getScrollContainer(anchorEl.value))
 
@@ -89,9 +85,9 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
       arrowStyle as Record<string, number>,
     )
 
-    modalStyleRef.value = modalStyle
-    arrowStyleRef.value = arrowStyle
-    hotspotStyleRef.value = hotspotStyle
+    setModalStyle(modalStyle)
+    setArrowStyle(arrowStyle)
+    setHotpotStyle(hotspotStyle)
   }
 
   const handleNextChange = (): void => {
@@ -143,9 +139,8 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
       })
     }
 
-    if (getNodeName(scrollContainer.value) === 'html') {
+    if (getNodeName(scrollContainer.value) === 'html')
       return
-    }
 
     const documentEl = getDocumentElement(anchorEl.value)
     /* scroll to show the scroll container */
@@ -170,9 +165,9 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
   }
 
   const handleResize = (): void => {
-    if (timerRef.value) {
+    if (timerRef.value)
       realWindow.value.cancelAnimationFrame(timerRef.value)
-    }
+
     timerRef.value = realWindow.value.requestAnimationFrame(() => {
       calculateStyle()
     })
@@ -183,9 +178,7 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
       '.guide-modal-title, .guide-modal-content, .guide-modal-footer-text, .guide-modal-footer-btn',
     ) || null
 
-    if (e.keyCode !== 9 || !focusableEls) {
-      return
-    }
+    if (e.keyCode !== 9 || !focusableEls) return
 
     (e as KeyboardEvent)?.preventDefault?.()
 
@@ -197,21 +190,21 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
     ele.focus()
     focusedElRef.value = ele
 
-    if (idx === len - 1 && !(e as KeyboardEvent).shiftKey) {
+    if (idx === len - 1 && !(e as KeyboardEvent).shiftKey)
       focusedIdxRef.value = 0
-    } else if (idx === 0 && (e as KeyboardEvent).shiftKey) {
+    else if (idx === 0 && (e as KeyboardEvent).shiftKey)
       focusedIdxRef.value = len - 1
-    } else if ((e as KeyboardEvent).shiftKey) {
+    else if ((e as KeyboardEvent).shiftKey)
       focusedIdxRef.value -= 1
-    } else {
+    else
       focusedIdxRef.value += 1
-    }
   }
 
   useEffect(() => {
     if (stepInfo.value.skip) {
       ctx.emit('change', 1)
-    } else if (visible.value) {
+    }
+    else if (visible.value) {
       focusedIdxRef.value = 0
 
       handleScroll()
@@ -230,17 +223,21 @@ export const Modal = defineComponent<IModal & { visible?: boolean }>((props, ctx
 
   return () => (visible.value ? (
     <Teleport to={parentEl.value}>
-      <div ref={modalRef} class={PREFIX} style={normalizedModalStyle.value}>
+      <div ref={modalRef} class={PREFIX} style={modalStyle.value}>
         {/* ARROW */}
-        {arrow.value && <span class={`${PREFIX}-arrow`} style={normalizedArrowStyle.value} />}
+        {arrow.value && <span class={`${PREFIX}-arrow`} style={arrowStyle.value} />}
         {/* HOT SPOT */}
-        {hotspot.value && <div class={`${PREFIX}-hotspot`} style={normalizedHotspotStyle.value} />}
+        {hotspot.value && <div class={`${PREFIX}-hotspot`} style={hotspotStyle.value} />}
         {/* CLOSE BUTTON */}
-        {ctx.slots.close ? (
-          <div class={`${PREFIX}-close-icon`} onClick={() => ctx.emit('close')}>{ctx.slots.close}</div>
-        ) : closable.value ? (
-          <CloseSmall class={`${PREFIX}-close-icon`} />
-        ) : null}
+        {ctx.slots.close
+          ? (
+            <div class={`${PREFIX}-close-icon`} onClick={() => ctx.emit('close')}>{ctx.slots.close}</div>
+          )
+          : closable.value
+            ? (
+              <CloseSmall class={`${PREFIX}-close-icon`} />
+            )
+            : null}
         {/* MODAL TITLE */}
         <div class={`${PREFIX}-title`}>{stepInfo.value.title}</div>
         {/* MODAL CONTENT */}
@@ -296,3 +293,5 @@ Modal.props = {
 }
 Modal.emits = ['change', 'close'] as const
 Modal.inheritAttrs = false
+
+export default Modal

@@ -1,4 +1,4 @@
-import { SinglePlacement } from '../typings/guide'
+import type { SinglePlacement } from '../typings/guide'
 
 export const getReversePosition = (
   position: SinglePlacement,

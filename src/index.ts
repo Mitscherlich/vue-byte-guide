@@ -1,10 +1,10 @@
 import { Guide } from './components'
-import {
-  IGuide, IStep, SelectorType, ContentType, Placement,
+import type {
+  ContentType, IGuide, IStep, Placement, SelectorType,
 } from './typings/guide'
 
 /** import global styles */
-import './styles/index.less'
+import './styles/index.css'
 
 export type {
   IGuide, IStep, SelectorType, ContentType, Placement,

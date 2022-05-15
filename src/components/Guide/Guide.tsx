@@ -2,20 +2,20 @@ import PropTypes from 'vue-types'
 import {
   computed, defineComponent, ref, toRefs,
 } from 'vue'
+import { useEffect } from '@m9ch/vhooks'
 
 import {
-  getOffsetParent,
-  getDocument,
-  getDocumentElement,
-  getWindow,
   getAnchorEl,
   getCusAnchorEl,
+  getDocument,
+  getDocumentElement,
+  getOffsetParent,
+  getWindow,
 } from '../../utils'
-import { useEffect } from '../../composable'
 import { i18n } from '../../constants/lang'
 import { Mask } from '../Mask'
 import { Modal } from '../Modal'
-import { IGuide } from '../../typings/guide'
+import type { IGuide } from '../../typings/guide'
 import { CUSTOM_ELEMENT_CLASS } from '../../constants/className'
 
 export const Guide = defineComponent<IGuide>((props, ctx) => {
@@ -58,13 +58,9 @@ export const Guide = defineComponent<IGuide>((props, ctx) => {
     if (stepIndex.value >= 0 && stepIndex.value < steps.length) {
       const { targetPos, selector } = steps[stepIndex.value]
 
-      if (selector) {
-        return getAnchorEl(selector)
-      }
+      if (selector) return getAnchorEl(selector)
 
-      if (targetPos) {
-        return getCusAnchorEl(targetPos)
-      }
+      if (targetPos) return getCusAnchorEl(targetPos)
     }
     return null
   })
@@ -86,14 +82,12 @@ export const Guide = defineComponent<IGuide>((props, ctx) => {
     /* If the mask is displayed, the document's overflow value would have been set to `hidden`.
      * It should be recovered to its initial value as saved by initOverflowVal
      */
-    if (mask.value) {
+    if (mask.value)
       (realDocument.value as HTMLElement).style.overflow = initOverflowVal.value
-    }
 
     const cusAnchor = document.querySelector(CUSTOM_ELEMENT_CLASS)
-    if (cusAnchor) {
+    if (cusAnchor)
       document.body.removeChild(cusAnchor)
-    }
 
     stepIndex.value = -1
 
@@ -111,9 +105,8 @@ export const Guide = defineComponent<IGuide>((props, ctx) => {
 
   // skip the guide when click the escape key;
   const handleKeydown = (e: KeyboardEvent): void => {
-    if (e.key === 'Escape' && (closable || stepIndex.value === steps.length - 1)) {
+    if (e.key === 'Escape' && (closable || stepIndex.value === steps.length - 1))
       handleClose()
-    }
   }
 
   useEffect(() => {
@@ -122,10 +115,10 @@ export const Guide = defineComponent<IGuide>((props, ctx) => {
       const expireDateParse = new Date(
         Date.parse(expireDate.value!.replace(/-/g, '/')),
       )
-      if (!haveShownGuide && (!expireDate.value || new Date() <= expireDateParse)) {
+      if (!haveShownGuide && (!expireDate.value || new Date() <= expireDateParse))
         stepIndex.value = step.value!
-      }
-    } else {
+    }
+    else {
       stepIndex.value = -1
     }
   }, [visible, step])
@@ -138,13 +131,11 @@ export const Guide = defineComponent<IGuide>((props, ctx) => {
         realWindow.value?.removeEventListener('keydown', handleKeydown as EventListener)
       }
     }
-
   }, [realWindow, realDocument])
 
   useEffect(() => {
-    if (stepIndex.value >= 0) {
+    if (stepIndex.value >= 0)
       afterStepChange?.(stepIndex.value, steps[stepIndex.value])
-    }
   }, [stepIndex])
 
   useEffect(() => {

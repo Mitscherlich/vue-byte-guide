@@ -30,7 +30,7 @@ export default defineComponent({
 </template>
 
 <style scoped>
-.guide-hidden-footer >>> .guide-modal-footer {
+.guide-hidden-footer :deep(.guide-modal-footer) {
   display: none;
 }
 </style>

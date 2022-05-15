@@ -1,5 +1,5 @@
 import type { VNode } from 'vue'
-import { StepNumber } from '../constants/lang'
+import type { StepNumber } from '../constants/lang'
 
 export type SinglePlacement = 'top' | 'bottom' | 'left' | 'right'
 

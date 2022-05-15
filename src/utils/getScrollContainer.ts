@@ -1,8 +1,8 @@
 import {
-  getDocumentElement,
-  getParentNode,
   getComputedStyle,
+  getDocumentElement,
   getNodeName,
+  getParentNode,
   isHTMLElement,
 } from './utils'
 
@@ -13,8 +13,8 @@ export const getScrollContainer = (
   let currentNode = getParentNode(node)
 
   while (
-    isHTMLElement(currentNode as Element) &&
-    ['html', 'body'].indexOf(getNodeName(currentNode as Element)) < 0
+    isHTMLElement(currentNode as Element)
+    && !['html', 'body'].includes(getNodeName(currentNode as Element))
   ) {
     const css = getComputedStyle(currentNode as Element)
     const { overflowY } = css
@@ -23,12 +23,12 @@ export const getScrollContainer = (
     callback?.(currentNode as Element)
 
     if (
-      isScrollable &&
-      (currentNode as Element).scrollHeight >
-        (currentNode as Element).clientHeight
-    ) {
+      isScrollable
+      && (currentNode as Element).scrollHeight
+        > (currentNode as Element).clientHeight
+    )
       return currentNode as Element
-    }
+
     currentNode = (currentNode as Element).parentNode
   }
 

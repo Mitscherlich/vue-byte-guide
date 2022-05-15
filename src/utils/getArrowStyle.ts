@@ -1,5 +1,5 @@
+import type { Placement } from '../typings/guide'
 import { getReversePosition } from './getReversePosition'
-import { Placement } from '../typings/guide'
 
 type SinglePlacement = 'top' | 'bottom' | 'left' | 'right'
 
@@ -29,13 +29,13 @@ export const getArrowStyle = (
   }
 
   if (!lastPlacement) {
-    const style: { [key: string]: any } = {}
-    if (['bottom', 'top'].includes(firstPlacement)) {
+    const style: Record<string, any> = {}
+    if (['bottom', 'top'].includes(firstPlacement))
       style.right = (modalPos.width - diagonalWidth) / 2
-    }
-    if (['left', 'right'].includes(firstPlacement)) {
+
+    if (['left', 'right'].includes(firstPlacement))
       style.top = (modalPos.height - diagonalWidth) / 2
-    }
+
     return {
       ...style,
       ...extraStyle,

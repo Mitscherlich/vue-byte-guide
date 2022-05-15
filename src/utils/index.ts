@@ -13,4 +13,3 @@ export {
   getNodeName,
   getWindow,
 } from './utils'
-export { normalizeStyleBinding } from './style'

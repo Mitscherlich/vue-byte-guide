@@ -19,14 +19,14 @@ const LANGUAGES = {
     en: 'Previous step',
     ja: '前へ',
   },
-};
+}
 
-type languages = typeof LANGUAGES;
-type langType = 'zh' | 'en' | 'ja';
-export type StepNumber = (idx: number, length: number) => string;
+type languages = typeof LANGUAGES
+type langType = 'zh' | 'en' | 'ja'
+export type StepNumber = (idx: number, length: number) => string
 
 export function i18n(lang: langType = 'zh'): (key: keyof languages) => string | StepNumber {
   return (key: keyof languages): string | StepNumber => {
-    return LANGUAGES[key]?.[lang];
-  };
+    return LANGUAGES[key]?.[lang]
+  }
 }

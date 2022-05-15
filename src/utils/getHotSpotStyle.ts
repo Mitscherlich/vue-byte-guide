@@ -1,5 +1,5 @@
+import type { Placement, SinglePlacement } from '../typings/guide'
 import { getReversePosition } from './getReversePosition'
-import { SinglePlacement, Placement } from '../typings/guide'
 
 export const getHotSpotStyle = (
   placement: Placement = 'bottom',

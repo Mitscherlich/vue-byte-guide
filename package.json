@@ -1,43 +1,59 @@
 {
   "name": "vue-byte-guide",
-  "version": "0.1.0",
+  "version": "0.1.0-alpha.0",
   "description": "A new feature guide component by Vue",
-  "main": "lib/index.js",
-  "types": "types/index.d.ts",
+  "main": "./dist/index.mjs",
+  "module": "./lib/index.mjs",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.mjs",
+      "types": "./lib/index.d.ts"
+    }
+  },
   "files": [
     "dist",
-    "lib",
-    "types"
+    "lib"
   ],
   "scripts": {
     "example:dev": "cd example && vite",
-    "example:build": "cd example && vite build",
-    "tsc": "tsc",
-    "tsc:dev": "tsc -w",
-    "copyAssets": "copyfiles -u 1 'src/**/*.less' lib",
-    "build": "run-s tsc copyAssets",
-    "bundle": "rollup -c rollup.config.js",
-    "prepublishOnly": "run-p build bundle"
+    "build": "unbuild",
+    "dev": "unbuild --stub",
+    "lint": "eslint .",
+    "prepublishOnly": "nr build",
+    "release": "bumpp --commit --push --tag && npm publish",
+    "test": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@vue/composition-api": "^1.0.0-rc.1",
+    "vue": "^2.0.0 || >=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
   },
   "dependencies": {
+    "@m9ch/vhooks": "^0.1.0-alpha.11",
     "vue-types": "^4.1.1"
   },
   "devDependencies": {
-    "@babel/types": "^7.17.0",
+    "@antfu/ni": "^0.16.2",
+    "@m9ch/eslint-config-all": "^0.2.1",
     "@types/node": "*",
-    "@vitejs/plugin-vue": "^2.2.4",
-    "@vitejs/plugin-vue-jsx": "^1.3.8",
-    "copyfiles": "^2.4.1",
-    "less": "^4.1.2",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vitejs/plugin-vue-jsx": "^1.3.10",
+    "bumpp": "^7.1.1",
+    "eslint": "^8.15.0",
     "lodash": "^4.17.21",
     "npm-run-all": "^4.1.5",
-    "rollup": "^2.70.1",
-    "tslib": "^2.3.1",
+    "rimraf": "^3.0.2",
     "typescript": "^4.6.2",
-    "vite": "^2.8.6",
-    "vue": "^3.2.31"
-  },
-  "peerDependencies": {
-    "vue": "^2.6 || ^3.2.0"
+    "unbuild": "^0.7.4",
+    "vite": "^2.9.9",
+    "vitest": "^0.12.6",
+    "vue": "^3.2.33"
   }
 }

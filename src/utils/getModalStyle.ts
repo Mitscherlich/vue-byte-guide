@@ -1,6 +1,6 @@
+import { MARGIN } from '../constants/const'
 import { getComputedStyle, getNodeName } from './utils'
 import { getOffsetTop } from './getOffsetParent'
-import { MARGIN } from '../constants/const'
 
 interface IModalStyle {
   position: 'absolute' | 'fixed'
@@ -54,22 +54,22 @@ export const getModalStyle = (
   const { width, height } = anchorPos
 
   const transform: Record<string, Record<string, number>> = {
-    top: {
+    'top': {
       // modal放到内容的上面
       top: top - modalPos.height - MARGIN,
       left: left + width / 2 - modalPos.width / 2,
     },
-    bottom: {
+    'bottom': {
       // modal放到内容的下面
       top: bottom + MARGIN,
       left: left + width / 2 - modalPos.width / 2,
     },
-    left: {
+    'left': {
       // modal放到内容的左边
       top: top + height / 2 - modalPos.height / 2,
       left: left - modalPos.width - MARGIN,
     },
-    right: {
+    'right': {
       // modal放到内容的右边
       top: top + height / 2 - modalPos.height / 2,
       left: left + width + MARGIN,

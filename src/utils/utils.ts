@@ -18,37 +18,8 @@ export const getWindow = (
   return node
 }
 
-export const getDocument = (node: Node | Window | Element): Document => (isElement(node as Element)
-  ? (node as Node).ownerDocument
-  : (node as Window).document) || window.document
-
-/* Get the Element that is the root element of the document which contains the node
- * (for example, the <html> element for HTML documents).
- */
-export const getDocumentElement = (node: Element): HTMLElement => getDocument(node).documentElement
-
-/* Get node's style info */
-export const getComputedStyle = (node: Element): CSSStyleDeclaration => (getWindow(node) as Window & typeof globalThis).getComputedStyle(node)
-
 /* Get node's node name */
 export const getNodeName = (node: Element | null): string => (node ? (node.nodeName || '').toLowerCase() : '')
-
-export const getParentNode = (
-  node: Element | null,
-): (Node & ParentNode
-  ) | null => {
-  if (!node || getNodeName(node) === 'html') {
-    return node
-  }
-
-  return (
-    // If node is rooted at a custom element, meaning the node is part of a shadow DOM
-    node.assignedSlot // step into the shadow DOM of the parent of a slotted node
-    || node.parentNode // DOM Element detected
-    || (node as unknown as ShadowRoot).host // ShadowRoot detected
-    || getDocumentElement(node) // fallback
-  )
-}
 
 /* Check if node is an Element or a customized Element */
 export const isElement = (node: Element): boolean => {
@@ -63,4 +34,32 @@ export const isHTMLElement = (node: Element): boolean => {
 }
 
 // Check if node is an HTMLElement or a customized HTMLElement
-export const isTableElement = (node: Element): boolean => ['table', 'td', 'th'].indexOf(getNodeName(node)) >= 0
+export const isTableElement = (node: Element): boolean => ['table', 'td', 'th'].includes(getNodeName(node))
+
+export const getDocument = (node: Node | Window | Element): Document => (isElement(node as Element)
+  ? (node as Node).ownerDocument
+  : (node as Window).document) || window.document
+
+/* Get the Element that is the root element of the document which contains the node
+ * (for example, the <html> element for HTML documents).
+ */
+export const getDocumentElement = (node: Element): HTMLElement => getDocument(node).documentElement
+
+/* Get node's style info */
+export const getComputedStyle = (node: Element): CSSStyleDeclaration => (getWindow(node) as Window & typeof globalThis).getComputedStyle(node)
+
+export const getParentNode = (
+  node: Element | null,
+): (Node & ParentNode
+  ) | null => {
+  if (!node || getNodeName(node) === 'html')
+    return node
+
+  return (
+    // If node is rooted at a custom element, meaning the node is part of a shadow DOM
+    node.assignedSlot // step into the shadow DOM of the parent of a slotted node
+    || node.parentNode // DOM Element detected
+    || (node as unknown as ShadowRoot).host // ShadowRoot detected
+    || getDocumentElement(node) // fallback
+  )
+}

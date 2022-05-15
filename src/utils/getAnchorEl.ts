@@ -1,4 +1,4 @@
-import { SelectorType } from '../typings/guide'
+import type { SelectorType } from '../typings/guide'
 
 /**
  * Get the anchor element where the modal should be attached to.
@@ -7,10 +7,10 @@ import { SelectorType } from '../typings/guide'
 export const getAnchorEl = (selector: SelectorType): Element | null => {
   const type = typeof selector
 
-  if (type === 'string') {
+  if (type === 'string')
     return document.querySelector(selector as string)
-  } if (type === 'function') {
+  if (type === 'function')
     return (selector as () => Element)()
-  }
+
   return selector as Element | null
 }

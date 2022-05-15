@@ -1,10 +1,10 @@
 import PropTypes from 'vue-types'
 import {
-  defineComponent, ref, Teleport, toRefs,
+  Teleport, defineComponent, ref, toRefs,
 } from 'vue'
-import { useEffect, useNormalizedStyle } from '../../composable'
+import { useEffect } from '@m9ch/vhooks'
 import { getDocument, getMaskStyle } from '../../utils'
-import './Mask.less'
+import './Mask.css'
 
 export interface MaskProps {
   anchorEl: Element
@@ -18,17 +18,15 @@ export const Mask = defineComponent<MaskProps>((props, ctx) => {
   const styleRef = ref<Record<string, number>>({})
   const timerRef = ref<number>(0)
 
-  const normalizedMaskStyle = useNormalizedStyle(styleRef)
-
   const calculateStyle = (): void => {
     const style = getMaskStyle(anchorEl.value)
     styleRef.value = style
   }
 
   const handleResize = (): void => {
-    if (timerRef.value) {
+    if (timerRef.value)
       realWindow.value.cancelAnimationFrame(timerRef.value)
-    }
+
     timerRef.value = realWindow.value.requestAnimationFrame(() => {
       calculateStyle()
     })
@@ -47,13 +45,12 @@ export const Mask = defineComponent<MaskProps>((props, ctx) => {
   }, [realWindow, anchorEl])
 
   return () => {
-    if (!anchorEl.value) {
+    if (!anchorEl.value)
       return null
-    }
 
     return (
       <Teleport to={getDocument(anchorEl.value).body}>
-        <div class={['guide-mask', className]} style={normalizedMaskStyle.value} />
+        <div class={['guide-mask', className]} style={styleRef.value} />
       </Teleport>
     )
   }

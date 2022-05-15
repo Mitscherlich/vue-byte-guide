@@ -1,8 +1,8 @@
 import {
-  getWindow,
-  getParentNode,
   getComputedStyle,
   getNodeName,
+  getParentNode,
+  getWindow,
   isHTMLElement,
   isTableElement,
 } from './utils'
@@ -16,8 +16,8 @@ export const getContainingBlock = (
   let currentNode = getParentNode(node)
 
   while (
-    isHTMLElement(currentNode as Element) &&
-    ['html', 'body'].indexOf(getNodeName(currentNode as Element)) < 0
+    isHTMLElement(currentNode as Element)
+    && !['html', 'body'].includes(getNodeName(currentNode as Element))
   ) {
     callback?.(currentNode as Element)
     const css = getComputedStyle(currentNode as Element)
@@ -29,12 +29,12 @@ export const getContainingBlock = (
      * element that has the following:
      */
     if (
-      css.transform !== 'none' ||
-      css.perspective !== 'none' ||
-      (css.willChange && css.willChange !== 'auto')
-    ) {
+      css.transform !== 'none'
+      || css.perspective !== 'none'
+      || (css.willChange && css.willChange !== 'auto')
+    )
       return currentNode
-    }
+
     currentNode = getParentNode(currentNode as Element)
   }
 
@@ -42,9 +42,8 @@ export const getContainingBlock = (
 }
 
 export const getTrueOffsetParent = (node: HTMLElement): Element | null => {
-  if (!isHTMLElement(node) || getComputedStyle(node).position === 'fixed') {
+  if (!isHTMLElement(node) || getComputedStyle(node).position === 'fixed')
     return null
-  }
 
   /**
    *  If there is no positioned ancestor element, the nearest ancestor td, th,
@@ -70,9 +69,9 @@ export const getOffsetParent = (
    * as a <div> cannot appear as a child of <table>.
    */
   while (
-    offsetParent &&
-    isTableElement(offsetParent) &&
-    getComputedStyle(offsetParent).position === 'static'
+    offsetParent
+    && isTableElement(offsetParent)
+    && getComputedStyle(offsetParent).position === 'static'
   ) {
     callback?.(offsetParent)
     offsetParent = getTrueOffsetParent(offsetParent as HTMLElement)

@@ -5,5 +5,3 @@ import Basic from './demo/Basic'
 <template>
   <Basic />
 </template>
-
-<style src="./normalize.less"></style>
